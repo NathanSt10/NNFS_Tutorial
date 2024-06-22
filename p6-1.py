@@ -9,4 +9,4 @@ norm_values = exp_values/np.sum(exp_values, axis=1, keepdims=True)
 
 print(exp_values)
 print(norm_values)
-print(sum(norm_values))
+print(np.sum(norm_values, axis=1, keepdims=1))
