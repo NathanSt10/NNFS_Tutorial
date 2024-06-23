@@ -6,4 +6,5 @@ softmax_outputs = np.array([[0.7, 0.1, 0.2],
 
 class_targets = [0, 1, 1]
 
-print(-np.log(softmax_outputs[[0, 1, 2], class_targets]))
+# print(-np.log(softmax_outputs[[0, 1, 2], class_targets]))
+print(-np.log(softmax_outputs[range(len(softmax_outputs)), class_targets]))
