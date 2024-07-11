@@ -32,6 +32,7 @@ class Activation_ReLU:
 
 class Activation_Softmax:
     def forward(self, inputs):
+        self.inputs = inputs
         exp_values = np.exp(inputs - np.max(inputs, axis=1, keepdims=True))
         probabilities = exp_values / np.sum(exp_values, axis=1, keepdims=True)
         self.output = probabilities
@@ -75,6 +76,27 @@ class Loss_CategoricalCrossEntropy(Loss):
             y_true = np.eye(labels)[y_true]
 
         self.dinputs = -y_true / dvalues
+        self.dinputs = self.dinputs / samples
+
+
+class Activation_Softmax_Loss_CategoricalCrossEntropy:
+    def __init__(self):
+        self.activation = Activation_Softmax()
+        self.loss = Loss_CategoricalCrossEntropy()
+
+    def forward(self, inputs, y_true):
+        self.activation.forward(inputs)
+        self.output = self.activation.output
+        return self.loss.calculate(self.output, y_true)
+
+    def backward(self, dvalues, y_true):
+        samples = len(dvalues)
+
+        if len(y_true.shape) == 2:
+            y_true = np.argmax(y_true, axis=1)
+
+        self.dinputs = dvalues.copy()
+        self.dinputs[range(samples), y_true] -= 1
         self.dinputs = self.dinputs / samples
 
 
